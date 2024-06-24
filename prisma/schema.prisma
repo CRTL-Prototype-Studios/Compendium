@@ -1,0 +1,37 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Content {
+  id              Int         @id @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  content_desc    String?
+  content_url     String
+  content_info    Information @relation(fields: [content_info_id], references: [id])
+  content_info_id Int
+  content_type    ContentType @default(frame)
+}
+
+model Information {
+  id           Int       @id @default(autoincrement())
+  lens         String?
+  aperture     String?
+  shutterspeed String?
+  iso          String?
+  camera       String?
+  Content      Content[]
+}
+
+enum ContentType {
+  frame
+  motion
+
+  @@map("Content Type")
+}
