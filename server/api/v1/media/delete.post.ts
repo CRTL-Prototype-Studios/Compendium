@@ -1,12 +1,11 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-// import {usePrismaClient} from "~~/.nuxt/imports";
-// import {usePrismaClient} from "@prisma/nuxt/dist/runtime/composables/usePrismaClient";
+import {PrismaClient} from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     const { targetPath, targetId } = await readBody(event);
     const header = getHeader(event, 'Authorization');
-    const prisma = usePrismaClient();
 
     if (!header) {
         throw createError({

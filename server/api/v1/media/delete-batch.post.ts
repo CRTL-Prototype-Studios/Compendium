@@ -1,14 +1,13 @@
 // server/api/media/delete-batch.post.ts
 
-// import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import * as fs from 'node:fs/promises'
 import * as path from 'node:path'
 
-// const prisma = new PrismaClient()
+const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     const { ids } = await readBody(event)
-    const prisma = usePrismaClient()
 
     if (!Array.isArray(ids) || ids.length === 0) {
         throw createError({

@@ -14,8 +14,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     "@nuxt/image",
     'nuxt-file-storage',
-    "@nuxtjs/mdc",
-    "@prisma/nuxt"
+    "@nuxtjs/mdc"
   ],
 
   nitro: {

@@ -1,8 +1,8 @@
 // server/api/media/list.get.ts
 
-// import { PrismaClient } from '@prisma/client'
-//
-// const prisma = new PrismaClient()
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 interface StructuredMedia {
     [key: string]: {
@@ -12,7 +12,7 @@ interface StructuredMedia {
 }
 
 export default defineEventHandler(async (event) => {
-    const prisma = usePrismaClient()
+    // const prisma = usePrismaClient()
     try {
         const mediaItems = await prisma.media.findMany({
             orderBy: [

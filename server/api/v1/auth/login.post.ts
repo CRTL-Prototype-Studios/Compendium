@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 //@ts-ignore
 import jwt from 'jsonwebtoken';
 import { setCookie } from 'h3';
-// import { PrismaClient } from '@prisma/client'
-// const prisma = new PrismaClient()
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const prisma = usePrismaClient()
+    // const prisma = usePrismaClient()
 
     // Check if the username and password are provided
     if (!body.username || !body.password) {

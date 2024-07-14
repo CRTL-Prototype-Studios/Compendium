@@ -1,9 +1,9 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { randomUUID } from 'node:crypto';
-// import {PrismaClient} from "@prisma/client";
+import {PrismaClient} from "@prisma/client";
 import {target} from "@vue/devtools-shared";
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
     const form = await readMultipartFormData(event);
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     // Sample input: target directory is "Images", or "Images/AnotherFolder", or ""; default value is ""
     const config = useRuntimeConfig();
 
-    const prisma = usePrismaClient()
+    // const prisma = usePrismaClient()
 
     const processPseudoDir = (input: string) => {
         if(input === ''){

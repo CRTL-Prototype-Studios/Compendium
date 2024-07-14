@@ -1,13 +1,13 @@
 // server/api/media/listDirectory.get.ts
 
-// import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import path from "node:path";
 
-// const prisma = new PrismaClient()
+const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     const query = getQuery(event)
-    const prisma = usePrismaClient()
+    // const prisma = usePrismaClient()
 
     // Sample input: directory is "Images", or "Images/AnotherFolder", or ""
     const directory = ((query.directory as string) === '' ? '/' : (query.directory as string)) || '/'

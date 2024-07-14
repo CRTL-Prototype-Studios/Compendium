@@ -1,11 +1,11 @@
 
-// import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 //@ts-ignore
 import jwt from "jsonwebtoken";
-// const prisma = new PrismaClient()
+const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
-    const prisma = usePrismaClient()
+    // const prisma = usePrismaClient()
     const {token} = await readBody(event)
     if (!token) {
         return sendError(event, createError({ statusCode: 403, statusMessage: 'token is required' }));

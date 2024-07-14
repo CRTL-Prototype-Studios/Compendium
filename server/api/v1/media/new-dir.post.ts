@@ -1,13 +1,13 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-// import {PrismaClient} from "@prisma/client";
+import {PrismaClient} from "@prisma/client";
 import {FileOperationPatternKind} from "vscode-languageserver-protocol";
 import folder = FileOperationPatternKind.folder;
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
 
-    const prisma = usePrismaClient()
+    // const prisma = usePrismaClient()
 
     const processFolderName = (input: string) => {
         let temp = input.split('/')
