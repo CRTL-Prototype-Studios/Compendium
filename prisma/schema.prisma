@@ -9,14 +9,15 @@ datasource db {
 }
 
 model Content {
-  id              Int         @id @default(autoincrement())
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  content_desc    String?
-  content_url     String
-  content_info    Information @relation(fields: [content_info_id], references: [id])
-  content_info_id Int
-  content_type    ContentType @default(frame)
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  desc          String?
+  ctype         ContentType  @default(image)
+  info          Information? @relation(fields: [informationId], references: [id])
+  media         Media        @relation(fields: [mediaId], references: [id])
+  informationId Int?
+  mediaId       Int
 }
 
 model Information {
@@ -30,8 +31,42 @@ model Information {
 }
 
 enum ContentType {
-  frame
-  motion
+  image
+  video
+  audio
 
   @@map("Content Type")
+}
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  fileName        String
+  url             String
+  directory       String
+  pseudoDirectory String    @default("/")
+  isFolder        Boolean   @default(false)
+  Content         Content[]
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  uuid   String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  username String
+  password String
+  tokens   Token[]
 }

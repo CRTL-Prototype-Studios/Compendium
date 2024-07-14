@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import ControlBarLayout from "~/layouts/ControlBarLayout.vue";
+import ControlBarLayout from "~/app/layouts/ControlBarLayout.vue";
 </script>
 
 <template>

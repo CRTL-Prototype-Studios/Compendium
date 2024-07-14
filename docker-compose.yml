@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  ultimate-frisbee:
+    image: type32/ultimate-frisbee:latest
+    ports:
+      - "${SITE_PORT}:3000"
+    restart: on-failure
+    volumes:
+      - media_data:/app/media
+
+volumes:
+  media_data:
