@@ -50,4 +50,6 @@ export default defineNuxtConfig({
     storageUseSSL: true,
     storageName: ''
   },
+
+  compatibilityDate: '2024-07-15',
 })
