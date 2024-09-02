@@ -8,25 +8,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Content {
-  id            Int          @id @default(autoincrement())
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  desc          String?
-  ctype         ContentType  @default(image)
-  info          Information? @relation(fields: [informationId], references: [id])
-  media         Media        @relation(fields: [mediaId], references: [id])
-  informationId Int?
-  mediaId       Int
+model Gallery {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  contents  Content[]
+  name      String
+  desc      String?
 }
 
-model Information {
-  id           Int       @id @default(autoincrement())
-  lens         String?
+model Content {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  desc         String?
+  ctype        ContentType @default(image)
+  media        Media       @relation(fields: [mediaId], references: [id])
+  mediaId      Int
+  gallery      Gallery?    @relation(fields: [galleryId], references: [id])
+  galleryId    Int?
   aperture     String?
   shutterspeed String?
   iso          String?
-  camera       String?
+  camera       Camera      @relation(fields: [cameraId], references: [id])
+  cameraId     Int
+  lens         Lens        @relation(fields: [lensId], references: [id])
+  lensId       Int
+}
+
+model Camera {
+  id      Int       @id @default(autoincrement())
+  name    String
+  Content Content[]
+}
+
+model Lens {
+  id           Int       @id @default(autoincrement())
+  focal_length String?
+  name         String
   Content      Content[]
 }
 
@@ -68,5 +87,6 @@ model User {
 
   username String
   password String
+  aboutMe  String
   tokens   Token[]
 }

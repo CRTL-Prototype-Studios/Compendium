@@ -1,5 +1,9 @@
 <script setup lang="ts">
 
+import {$fetch} from "ofetch";
+
+const auth = useAuth()
+
 const groups = [{
     key: 'users',
     label: (q: any) => q && `Users matching “${q}”...`,
@@ -14,6 +18,15 @@ const groups = [{
     }
 }]
 
+let dropdown: any[] = [
+    [
+        {label: 'About Me', icon: 'i-heroicons-information-circle', to: '/about-me'}
+    ],
+    [
+        {label: 'Sign In', icon: 'i-heroicons-arrow-right-end-on-rectangle', to: '/auth'}
+    ]
+]
+
 const searchOpen = ref(false)
 const aboutMeOpen = ref(false)
 
@@ -26,30 +39,47 @@ defineShortcuts({
     }
 })
 
+onBeforeMount(async () => {
+    await auth.validateToken()
+    if(auth.isAuthenticated.value){
+        // console.log(auth.isAuthenticated.value)
+        dropdown = [
+            [
+                {label: 'Dashboard', icon: 'i-heroicons-adjustments-horizontal', to: '/dashboard'},
+                {label: 'About Me', icon: 'i-heroicons-information-circle', to: '/about-me'}
+            ],
+            [
+                {label: 'Sign Out', icon: 'i-heroicons-arrow-right-end-on-rectangle', click: () => {}}
+            ]
+        ]
+    }
+})
+
 const {metaSymbol} = useShortcuts()
 </script>
 
 <template>
-    <div class="sticky top-0 grid grid-cols-3 w-full p-4 backdrop-blur-2xl bg-transparent select-none">
-        <div class="flex flex-row items-center justify-start gap-2">
-            <UButton @click="searchOpen = true" icon="i-heroicons-magnifying-glass" size="sm" color="black" variant="ghost" square/>
-            <div class="flex items-center gap-0.5">
-                <UKbd>{{ metaSymbol }}</UKbd>
-                <UKbd>K</UKbd>
-            </div>
-        </div>
-        <div class="flex flex-row items-center justify-center">
-            <span>Compendium of <UButton variant="outline" @click="aboutMeOpen = true">Anonymous</UButton></span>
-        </div>
-        <div class="flex flex-row items-center justify-end gap-2">
-            <UButton icon="i-heroicons-cog-6-tooth" size="sm" color="black" variant="ghost" square/>
-            <UButton icon="i-heroicons-user" size="sm" color="black" variant="ghost" square/>
-            <UButton icon="i-heroicons-code-bracket" size="sm" color="black" variant="ghost" square/>
+    <UMain>
+        <NuxtLayout>
+            <slot/>
+        </NuxtLayout>
+    </UMain>
+    <div class="justify-center flex flex-col inset-x-0 mx-auto fixed bottom-10 h-fit items-center align-middle">
+        <div class="flex flex-row p-2 border rounded-2xl">
+            <UTooltip text="Search" :shortcuts="['⌘', 'K']" :popper="{placement:'top'}">
+                <UButton @click="searchOpen = true" icon="i-heroicons-magnifying-glass" size="sm" color="black" variant="ghost" square/>
+            </UTooltip>
+            <UTooltip text="Blog" :popper="{placement:'top'}">
+                <UButton to="/blog" icon="i-heroicons-book-open" size="sm" color="black" variant="ghost" square/>
+            </UTooltip>
+            <UTooltip text="User" :popper="{placement:'top'}">
+                <UDropdown :items="dropdown" trigger="hover" :popper="{placement:'top-start'}">
+                    <UButton icon="i-heroicons-user-circle" size="sm" color="black" variant="ghost" square/>
+                </UDropdown>
+            </UTooltip>
         </div>
     </div>
-    <div class="w-full">
-        <slot/>
-    </div>
+
     <UModal v-model="searchOpen">
         <UCommandPalette
             :groups="groups"
@@ -74,5 +104,7 @@ const {metaSymbol} = useShortcuts()
 </template>
 
 <style scoped>
-
+div, main {
+    font-family: Inter, sans-serif;
+}
 </style>

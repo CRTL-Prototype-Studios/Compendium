@@ -24,6 +24,9 @@ export default defineEventHandler(async (event) => {
             }
         })
 
+        if(!data)
+            return {valid: false, data}
+
         // console.log(!!data + " validate")
         return {valid: !!data, data}
     } catch (error) {
