@@ -1,49 +1,58 @@
 // server/api/media/delete-batch.post.ts
 
-import { PrismaClient } from '@prisma/client'
-import * as fs from 'node:fs/promises'
-import * as path from 'node:path'
-
-const prisma = new PrismaClient()
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { useInstantDB } from "~/composables/useInstantDB";
 
 export default defineEventHandler(async (event) => {
-    const { ids } = await readBody(event)
+	const { ids } = await readBody(event);
+	const $db = useInstantDB();
 
-    if (!Array.isArray(ids) || ids.length === 0) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Invalid or empty ids array',
-        })
-    }
+	if (!Array.isArray(ids) || ids.length === 0) {
+		throw createError({
+			statusCode: 400,
+			statusMessage: "Invalid or empty ids array",
+		});
+	}
 
-    try {
-        const mediaItems = await prisma.media.findMany({
-            where: { id: { in: ids } }
-        })
+	try {
+		const { data, pageInfo } = await $db.db.queryOnce({
+			files: {
+				$: {
+					where: {
+						id: {
+							$in: ids,
+						},
+					},
+				},
+			},
+		});
 
-        if(mediaItems.length === 0) {
-            throw new Error("No files/folders present at the selected directories")
-        }
+		if (!data || data.files.length <= 0) {
+			throw new Error("No files/folders present at the selected directories");
+		}
 
-        for (const item of mediaItems) {
-            const fullPath = path.join(process.cwd(), item.url)
-            if (item.isFolder) {
-                await fs.rm(fullPath, { recursive: true, force: true })
-            } else {
-                await fs.unlink(fullPath)
-            }
-        }
+		for (const item of data.files) {
+			const fullPath = path.join(process.cwd(), item.url);
+			if (item.directory) {
+				await fs.rm(fullPath, { recursive: true, force: true });
+			} else {
+				await fs.unlink(fullPath);
+			}
+		}
 
-        await prisma.media.deleteMany({
-            where: { id: { in: ids } }
-        })
+		let transactions = [];
+		for (const i of ids) {
+			transactions.push($db.tx.files[i].delete());
+		}
+		await $db.db.transact(transactions);
 
-        return { success: true, message: `Deleted ${mediaItems.length} item(s).` }
-    } catch (error) {
-        console.error('Error deleting batch:', error)
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error deleting batch',
-        })
-    }
-})
+		return { success: true, message: `Deleted ${data.files.length} item(s).` };
+	} catch (error) {
+		console.error("Error deleting batch:", error);
+		throw createError({
+			statusCode: 500,
+			statusMessage: "Error deleting batch",
+		});
+	}
+});

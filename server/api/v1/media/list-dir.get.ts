@@ -1,35 +1,42 @@
 // server/api/media/listDirectory.get.ts
-
-import { PrismaClient } from '@prisma/client'
 import path from "node:path";
-
-const prisma = new PrismaClient()
+import { useInstantDB } from "~/composables/useInstantDB";
 
 export default defineEventHandler(async (event) => {
-    const query = getQuery(event)
-    // const prisma = usePrismaClient()
+	const query = getQuery(event);
+	const $db = useInstantDB();
+	// const prisma = usePrismaClient()
 
-    // Sample input: directory is "Images", or "Images/AnotherFolder", or ""
-    const directory = ((query.directory as string) === '' ? '/' : (query.directory as string)) || '/'
+	// Sample input: directory is "Images", or "Images/AnotherFolder", or ""
+	const directory =
+		((query.directory as string) === "" ? "/" : (query.directory as string)) ||
+		"/";
 
-    try {
-        const mediaItems = await prisma.media.findMany({
-            where: {
-                pseudoDirectory: directory === '' ? '/' : directory
-            }
-        });
+	try {
+		const { data, pageInfo } = await $db.db.queryOnce({
+			files: {
+				$: {
+					where: {
+						pseudoDir: directory === "" ? "/" : directory,
+					},
+				},
+			},
+		});
 
-        const result = {
-            currentDirectory: directory,
-            parentDirectory: directory === '/' ? null : directory.split('/').slice(0, -1).join('/') || '/',
-            items: mediaItems
-        };
-        return result;
-    } catch (error) {
-        console.error('Error fetching directory contents:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error fetching directory contents.',
-        });
-    }
+		const result = {
+			currentDirectory: directory,
+			parentDirectory:
+				directory === "/"
+					? null
+					: directory.split("/").slice(0, -1).join("/") || "/",
+			items: data.files,
+		};
+		return result;
+	} catch (error) {
+		console.error("Error fetching directory contents:", error);
+		throw createError({
+			statusCode: 500,
+			statusMessage: "Error fetching directory contents.",
+		});
+	}
 });

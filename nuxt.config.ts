@@ -1,54 +1,79 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  future: {
-    compatibilityVersion: 4,
-  },
+	app: {
+		pageTransition: { name: "page", mode: "out-in" },
+		layoutTransition: { name: "layout", mode: "out-in" },
+	},
 
-  devtools: { enabled: true },
-  extends: ['@nuxt/ui-pro'],
+	future: {
+		compatibilityVersion: 4,
+	},
+	ssr: false,
+	compatibilityDate: "2024-11-01",
+	devtools: { enabled: true },
+	modules: [
+		"@nuxt/fonts",
+		"@nuxtjs/tailwindcss",
+		"@nuxtjs/color-mode",
+		"@vueuse/nuxt",
+		"@nuxt/icon",
+	],
+	tiptap: {
+		prefix: "Tiptap", //prefix for Tiptap imports, composables not included
+	},
 
-  modules: [
-    "@nuxt/ui",
-    "@nuxt/fonts",
-    "nuxt-tiptap-editor",
-    '@pinia/nuxt',
-    "@nuxt/image",
-    'nuxt-file-storage',
-    "@nuxtjs/mdc"
-  ],
+	runtimeConfig: {
+		amulet: {
+			allowUserSignups: true,
+			siteName: "Amulet",
+		},
+		tiptap: {
+			jwtSecret: "",
+			appID: "",
+		},
+		public: {
+			// Instant Configuration
+			instant: {
+				appID: process.env.INSTANT_APP_ID as string, // the app id
+				devtool: false, // show or hide instantDB devtool
+			},
+		},
+	},
 
-  nitro: {
-    storage: {
-      'media': { driver: 'fs', base: './media' }
-    }
-  },
+	tailwindcss: {
+		exposeConfig: true,
+		editorSupport: true,
+	},
 
-  // If you want to serve media files from a specific URL prefix
-  routeRules: {
-    '/media/**': { static: true }
-  },
+	colorMode: {
+		classSuffix: "",
+	},
 
-  fonts:{
-    families: [
-      { name: 'Inter', provider: 'google' }
-    ]
-  },
+	imports: {
+		imports: [
+			{
+				from: "tailwind-variants",
+				name: "tv",
+			},
+			{
+				from: "tailwind-variants",
+				name: "VariantProps",
+				type: true,
+			},
+			{
+				from: "vue-sonner",
+				name: "toast",
+				as: "useSonner",
+			},
+		],
+	},
 
-  tiptap: {
-    prefix: "Tiptap", //prefix for Tiptap imports, composables not included
-  },
+	build: {
+		transpile: ["vue-sonner"],
+	},
 
-  runtimeConfig: {
-    public: {
-      siteUrl: 'http://localhost:3000'
-    },
-    storageEndpoint: '',
-    storagePort: 9000,
-    storageSecretKey: '',
-    storageAccessKey: '',
-    storageUseSSL: true,
-    storageName: ''
-  },
-
-  compatibilityDate: '2024-07-15',
-})
+	vueTransitions: {
+		// The same options as in the plugin itself.
+		// You will get an autocomplete using Nuxt 3.
+	},
+});

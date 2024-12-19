@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	:root {
+		--background: 30 8% 95%;
+		--foreground: 0 8% 5%;
+
+		--card: 20 10% 94%;
+		--card-foreground: 0 8% 5%;
+
+		--popover: 20 10% 94%;
+		--popover-foreground: 0 8% 5%;
+
+		--primary: 21 82% 76%;
+		--primary-foreground: 0 9% 2%;
+
+		--secondary: 20 12% 91%;
+		--secondary-foreground: 0 8% 5%;
+
+		--muted: 15 8% 91%;
+		--muted-foreground: 23 9% 45%;
+
+		--accent: 15 8% 91%;
+		--accent-foreground: 0 8% 5%;
+
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 0% 98%;
+
+		--border: 20 9% 87%;
+		--input: 20 9% 80%;
+		--ring: 21 36% 72%;
+
+		--radius: 0.5rem;
+	}
+
+	.dark {
+		--background: 20 7% 8%;
+		--foreground: 60 9% 98%;
+
+		--card: 20 6% 10%;
+		--card-foreground: 60 9% 98%;
+
+		--popover: 20 6% 10%;
+		--popover-foreground: 60 9% 98%;
+
+		--primary: 21 68% 77%;
+		--primary-foreground: 0 9% 2%;
+
+		--secondary: 22 8% 19%;
+		--secondary-foreground: 60 9% 98%;
+
+		--muted: 22 7% 29%;
+		--muted-foreground: 21 8% 49%;
+
+		--accent: 21 71% 19%;
+		--accent-foreground: 60 9% 98%;
+
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 0% 98%;
+
+		--border: 24 8% 12%;
+		--input: 23 9% 18%;
+		--ring: 21 68% 40%;
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	html {
+		@apply antialiased;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+	}
+	h1 {
+		@apply mt-2 scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-3xl;
+	}
+	h2 {
+		@apply mb-2 mt-4 scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight transition-colors first:mt-0;
+	}
+	h3 {
+		@apply scroll-m-20 text-xl font-semibold tracking-tight;
+	}
+	h4 {
+		@apply scroll-m-20 text-lg font-semibold tracking-tight;
+	}
+	hr {
+		@apply my-2 w-full;
+	}
+	p {
+		@apply leading-5 [&:not(:first-child)]:mt-4;
+	}
+	blockquote {
+		@apply mt-4 border-l-2 pl-6 italic;
+	}
+	table {
+		@apply my-2 w-full;
+	}
+	th {
+		@apply border px-4 py-2 text-left font-bold [&[align=center]]:text-center [&[align=right]]:text-right;
+	}
+	tr {
+		@apply m-0 border-t p-0 even:bg-muted dark:even:bg-muted/15;
+	}
+	td {
+		@apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
+	}
+	code {
+		@apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+	}
+	.tiptap {
+		pre {
+			@apply my-6 overflow-x-auto rounded-md bg-muted p-4 text-muted-foreground;
+		}
+		li {
+			@apply my-6 ml-3 list-disc [&>li]:mt-2;
+		}
+		ol {
+			@apply my-6 ml-6 list-disc [&>li]:mt-2;
+		}
+		ul {
+			@apply my-6 ml-6 list-disc [&>li]:mt-2;
+		}
+	}
+	.light-card {
+		@apply z-20 rounded-lg border border-b-2 border-b-primary bg-gradient-to-t from-primary/15 to-card/70 shadow-sm backdrop-blur-lg;
+	}
+}
+
+@layer base {
+	:root {
+		--sidebar-background: 0 0% 98%;
+		--sidebar-foreground: 240 5.3% 26.1%;
+		--sidebar-primary: 240 5.9% 10%;
+		--sidebar-primary-foreground: 0 0% 98%;
+		--sidebar-accent: 240 4.8% 95.9%;
+		--sidebar-accent-foreground: 240 5.9% 10%;
+		--sidebar-border: 220 13% 91%;
+		--sidebar-ring: 217.2 91.2% 59.8%;
+		--sidebar-input: 240 5.9% 90%;
+	}
+
+	.dark {
+		--sidebar-background: 60 6% 10%;
+		--sidebar-foreground: 240 4.8% 95.9%;
+		--sidebar-primary: 224.3 76.3% 48%;
+		--sidebar-primary-foreground: 0 0% 100%;
+		--sidebar-accent: 240 3.7% 15.9%;
+		--sidebar-accent-foreground: 240 4.8% 95.9%;
+		--sidebar-border: 240 3.7% 15.9%;
+		--sidebar-ring: 217.2 91.2% 59.8%;
+		--sidebar-input: 240 3.7% 15.9%;
+	}
+}

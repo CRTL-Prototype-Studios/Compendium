@@ -1,52 +1,56 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { useInstantDB } from "~/composables/useInstantDB";
 
 interface StructuredMedia {
-    [key: string]: {
-        files: any[];
-        folders: StructuredMedia;
-    };
+	[key: string]: {
+		files: any[];
+		folders: StructuredMedia;
+	};
 }
 
 export default defineEventHandler(async (event) => {
-    // const prisma = usePrismaClient()
-    try {
-        const mediaItems = await prisma.media.findMany({
-            orderBy: [
-                { isFolder: 'desc' },
-                { fileName: 'asc' }
-            ]
-        });
+	const $db = useInstantDB();
+	// const prisma = usePrismaClient()
+	try {
+		const { data, pageInfo } = await $db.db.queryOnce({
+			files: {
+				$: {
+					order: {
+						created_at: "desc",
+					},
+				},
+			},
+		});
 
-        const structuredResult: StructuredMedia = { '/': { files: [], folders: {} } };
+		const structuredResult: StructuredMedia = {
+			"/": { files: [], folders: {} },
+		};
 
-        for (const item of mediaItems) {
-            const pathParts = item.directory.split('/').filter(Boolean);
-            let currentLevel = structuredResult['/'];
+		for (const item of data.files) {
+			const pathParts = item.path.split("/").filter(Boolean);
+			let currentLevel = structuredResult["/"];
 
-            for (const part of pathParts) {
-                if (!currentLevel.folders[part]) {
-                    currentLevel.folders[part] = { files: [], folders: {} };
-                }
-                currentLevel = currentLevel.folders[part];
-            }
+			for (const part of pathParts) {
+				if (!currentLevel.folders[part]) {
+					currentLevel.folders[part] = { files: [], folders: {} };
+				}
+				currentLevel = currentLevel.folders[part];
+			}
 
-            if (item.isFolder) {
-                if (!currentLevel.folders[item.fileName]) {
-                    currentLevel.folders[item.fileName] = { files: [], folders: {} };
-                }
-            } else {
-                currentLevel.files.push(item);
-            }
-        }
+			if (item.directory) {
+				if (!currentLevel.folders[item.fileName]) {
+					currentLevel.folders[item.fileName] = { files: [], folders: {} };
+				}
+			} else {
+				currentLevel.files.push(item);
+			}
+		}
 
-        return structuredResult;
-    } catch (error) {
-        console.error('Error fetching media:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error fetching media.',
-        });
-    }
+		return structuredResult;
+	} catch (error) {
+		console.error("Error fetching media:", error);
+		throw createError({
+			statusCode: 500,
+			statusMessage: "Error fetching media.",
+		});
+	}
 });
