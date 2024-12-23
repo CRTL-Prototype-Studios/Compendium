@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { target } from "@vue/devtools-shared";
-import { useInstantDB } from "~/composables/useInstantDB";
+import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const form = await readMultipartFormData(event);
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 	const targetPath = query.targetPath as string;
 	// Sample input: target directory is "Images", or "Images/AnotherFolder", or ""; default value is ""
 	const config = useRuntimeConfig();
-	const $db = useInstantDB();
+	const $db = useInstantDBAdmin();
 
 	// const prisma = usePrismaClient()
 

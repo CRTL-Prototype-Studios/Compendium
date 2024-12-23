@@ -38,6 +38,8 @@ export default defineNuxtConfig({
 				devtool: false, // show or hide instantDB devtool
 			},
 		},
+
+		instant_admin_key: '',
 	},
 
 	tailwindcss: {

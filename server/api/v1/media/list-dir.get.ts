@@ -1,10 +1,10 @@
 // server/api/media/listDirectory.get.ts
 import path from "node:path";
-import { useInstantDB } from "~/composables/useInstantDB";
+import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event);
-	const $db = useInstantDB();
+	const $db = useInstantDBAdmin();
 	// const prisma = usePrismaClient()
 
 	// Sample input: directory is "Images", or "Images/AnotherFolder", or ""
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 		"/";
 
 	try {
-		const { data, pageInfo } = await $db.db.queryOnce({
+		const data = await $db.db.query({
 			files: {
 				$: {
 					where: {

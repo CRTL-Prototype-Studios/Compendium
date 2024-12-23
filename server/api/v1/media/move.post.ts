@@ -1,11 +1,11 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDB } from "~/composables/useInstantDB";
+import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const { sourcePath, sourceId, destPath } = await readBody(event);
 	const header = getHeader(event, "Authorization");
-	const $db = useInstantDB();
+	const $db = useInstantDBAdmin();
 	// const prisma = usePrismaClient()
 
 	if (!header) {

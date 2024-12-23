@@ -1,6 +1,6 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDB } from "~/composables/useInstantDB";
+import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const processFolderName = (input: string) => {
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
 	const { targetPath, folderName } = await readBody(event);
 	const header = getHeader(event, "Authorization");
-	const $db = useInstantDB();
+	const $db = useInstantDBAdmin();
 
 	// Sample input: targetPath is "Images", or "Images/AnotherFolder", or ""
 	if (!header) {

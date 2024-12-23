@@ -12,6 +12,7 @@
   "dependencies": {
     "@dorilama/instantdb-vue": "^0.4.0",
     "@iconify/json": "^2.2.287",
+    "@instantdb/admin": "^0.17.3",
     "@instantdb/core": "^0.17.3",
     "@nuxt/fonts": "^0.10.3",
     "@nuxt/icon": "^1.10.3",

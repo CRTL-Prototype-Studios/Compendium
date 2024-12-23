@@ -1,11 +1,11 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDB } from "~/composables/useInstantDB";
+import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const { targetPath, targetId } = await readBody(event);
 	const header = getHeader(event, "Authorization");
-	const $db = useInstantDB();
+	const $db = useInstantDBAdmin();
 
 	if (!header) {
 		throw createError({
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 	}
 
 	try {
-		const { data, pageInfo } = await $db.db.queryOnce({
+		const data = await $db.db.query({
 			files: {
 				$: {
 					where: {
