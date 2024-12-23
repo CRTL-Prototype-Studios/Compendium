@@ -1,28 +1,25 @@
-import {init, tx, id, lookup, InstantVue} from "@dorilama/instantdb-vue";
+import { id, init, lookup } from "@dorilama/instantdb-vue";
+import schema, { type AppSchema } from "~/../instant.schema";
 
-// Schema Typescript Types
-// !Not the same as schema as code!
-import type { Schema } from "~/instant.schema.types";
-
-let db: InstantVue<Schema>;
-
-export const useInstantDB = () => {
+function initDB() {
 	// Nuxt Config
 	const config = useRuntimeConfig();
 	const APP_ID = config.public.instant.appID;
 	const DEVTOOL = config.public.instant.devtool;
 
-	// Initialise DB just once
-	function initDB() {
-		if (db) return;
-		db = init<Schema>({ appId: APP_ID, devtool: DEVTOOL });
+	return init({ appId: APP_ID, devtool: DEVTOOL, schema: schema as AppSchema });
+}
+
+let db: ReturnType<typeof initDB>;
+
+export const useInstantDB = () => {
+	if (!db) {
+		db = initDB();
 	}
-	initDB();
 
 	return {
 		db,
-		tx,
 		id,
-		lookup
+		lookup,
 	};
 };

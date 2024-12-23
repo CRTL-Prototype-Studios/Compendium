@@ -36,19 +36,19 @@ export default defineEventHandler(async (event) => {
 		let transactions = [];
 
 		for (const i of data.files) {
-			const oldPath = path.join(process.cwd(), i.url);
+			const oldPath = path.join(process.cwd(), i.url as string);
 			const newPath = path.join(
 				process.cwd(),
 				"media",
 				destination,
-				path.basename(i.url),
+				path.basename(i.url as string),
 			);
 
 			await fs.rename(oldPath, newPath);
 			transactions.push(
-				$db.tx.files[i.id].update({
+				$db.db.tx.files[i.id].update({
 					path: destination,
-					url: path.join(destination, path.basename(i.url)),
+					url: path.join(destination, path.basename(i.url as string)),
 				}),
 			);
 		}

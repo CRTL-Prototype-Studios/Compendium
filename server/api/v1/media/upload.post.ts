@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
 
 		const id = $db.id();
 		await $db.db.transact([
-			$db.tx.files[id].update({
+			$db.db.tx.files[id].update({
 				fileName: uniqueFilename,
 				url: permalink,
 				path: nativeFilePath,

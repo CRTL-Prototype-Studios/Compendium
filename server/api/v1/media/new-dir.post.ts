@@ -1,9 +1,6 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { useInstantDB } from "~/composables/useInstantDB";
-import { FileOperationPatternKind } from "vscode-languageserver-protocol";
-
-import folder = FileOperationPatternKind.folder;
 
 export default defineEventHandler(async (event) => {
 	const processFolderName = (input: string) => {
@@ -47,7 +44,7 @@ export default defineEventHandler(async (event) => {
 		await fs.mkdir(fullPath, { recursive: true });
 		const id = $db.id();
 		await $db.db.transact([
-			$db.tx.files[id].update({
+			$db.db.tx.files[id].update({
 				url: permalink,
 				fileName: folderName,
 				path: fullPath,

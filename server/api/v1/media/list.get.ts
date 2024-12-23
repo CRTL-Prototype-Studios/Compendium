@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 		};
 
 		for (const item of data.files) {
-			const pathParts = item.path.split("/").filter(Boolean);
+			const pathParts = (item.path as string).split("/").filter(Boolean);
 			let currentLevel = structuredResult["/"];
 
 			for (const part of pathParts) {
@@ -37,8 +37,8 @@ export default defineEventHandler(async (event) => {
 			}
 
 			if (item.directory) {
-				if (!currentLevel.folders[item.fileName]) {
-					currentLevel.folders[item.fileName] = { files: [], folders: {} };
+				if (!currentLevel.folders[item.fileName as string]) {
+					currentLevel.folders[item.fileName as string] = { files: [], folders: {} };
 				}
 			} else {
 				currentLevel.files.push(item);

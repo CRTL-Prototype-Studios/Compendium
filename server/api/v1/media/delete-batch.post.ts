@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
 		}
 
 		for (const item of data.files) {
-			const fullPath = path.join(process.cwd(), item.url);
+			const fullPath = path.join(process.cwd(), item.url as string);
 			if (item.directory) {
 				await fs.rm(fullPath, { recursive: true, force: true });
 			} else {
@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
 		let transactions = [];
 		for (const i of ids) {
-			transactions.push($db.tx.files[i].delete());
+			transactions.push($db.db.tx.files[i].delete());
 		}
 		await $db.db.transact(transactions);
 

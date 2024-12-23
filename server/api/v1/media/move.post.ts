@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
 		await fs.rename(fullSourcePath, fullDestPath);
 
 		await $db.db.transact([
-			$db.tx.files[sourceId as string].update({
+			$db.db.tx.files[sourceId as string].update({
 				path: destPath,
 				fileName: destPath.split("/")[destPath.length - 1],
 			}),
