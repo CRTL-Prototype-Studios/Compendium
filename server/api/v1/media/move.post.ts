@@ -1,11 +1,11 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
+// import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const { sourcePath, sourceId, destPath } = await readBody(event);
 	const header = getHeader(event, "Authorization");
-	const $db = useInstantDBAdmin();
+	// const $db = useInstantDBAdmin();
 	// const prisma = usePrismaClient()
 
 	if (!header) {
@@ -28,16 +28,20 @@ export default defineEventHandler(async (event) => {
 	try {
 		await fs.rename(fullSourcePath, fullDestPath);
 
-		await $db.db.transact([
-			$db.db.tx.files[sourceId as string].update({
-				path: destPath,
-				fileName: destPath.split("/")[destPath.length - 1],
-			}),
-		]);
+		// await $db.db.transact([
+		// 	$db.db.tx.files[sourceId as string].update({
+		// 		path: destPath,
+		// 		fileName: destPath.split("/")[destPath.length - 1],
+		// 	}),
+		// ]);
 
+		// return {
+		// 	success: true,
+		// 	message: `Moved from ${sourcePath} to ${destPath}`,
+		// };
 		return {
-			success: true,
-			message: `Moved from ${sourcePath} to ${destPath}`,
+			path: destPath,
+			fileName: destPath.split("/")[destPath.length - 1],
 		};
 	} catch (error) {
 		console.error("Error moving file/directory:", error);

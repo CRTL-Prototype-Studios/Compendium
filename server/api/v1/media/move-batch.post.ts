@@ -2,11 +2,11 @@
 
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
+// import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
-	const { ids, destination } = await readBody(event);
-	const $db = useInstantDBAdmin();
+	const { ids, destination, data } = await readBody(event);
+	// const $db = useInstantDBAdmin();
 	// const prisma = usePrismaClient()
 
 	if (
@@ -21,17 +21,17 @@ export default defineEventHandler(async (event) => {
 	}
 
 	try {
-		const data = await $db.db.query({
-			files: {
-				$: {
-					where: {
-						id: {
-							$in: ids,
-						},
-					},
-				},
-			},
-		});
+		// const data = await $db.db.query({
+		// 	files: {
+		// 		$: {
+		// 			where: {
+		// 				id: {
+		// 					$in: ids,
+		// 				},
+		// 			},
+		// 		},
+		// 	},
+		// });
 
 		let transactions = [];
 
@@ -46,19 +46,26 @@ export default defineEventHandler(async (event) => {
 
 			await fs.rename(oldPath, newPath);
 			transactions.push(
-				$db.db.tx.files[i.id].update({
+				// $db.db.tx.files[i.id].update({
+				// 	path: destination,
+				// 	url: path.join(destination, path.basename(i.url as string)),
+				// }),
+				{
+					id: i.id,
 					path: destination,
 					url: path.join(destination, path.basename(i.url as string)),
-				}),
+				}
 			);
+
 		}
 
-		await $db.db.transact(transactions);
+		// await $db.db.transact(transactions);
 
-		return {
-			success: true,
-			message: `Moved ${data.files.length} item(s) to ${destination}.`,
-		};
+		// return {
+		// 	success: true,
+		// 	message: `Moved ${data.files.length} item(s) to ${destination}.`,
+		// };
+		return transactions;
 	} catch (error) {
 		console.error("Error moving batch:", error);
 		throw createError({

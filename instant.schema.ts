@@ -17,16 +17,16 @@ const _schema = i.schema({
 			url: i.string().indexed(),
 		}),
 		galleries: i.entity({
-			created_at: i.date(),
-			name: i.string(),
+			created_at: i.date().indexed(),
+			name: i.string().indexed(),
 			public: i.boolean().indexed(),
-			updated_at: i.date(),
+			updated_at: i.date().indexed(),
 		}),
 		media: i.entity({
-			created_at: i.date(),
+			created_at: i.date().indexed(),
 			desc: i.string(),
 			name: i.string(),
-			updated_at: i.date(),
+			updated_at: i.date().indexed(),
 		}),
 		profiles: i.entity({
 			created_at: i.date(),
@@ -58,6 +58,18 @@ const _schema = i.schema({
 				has: "many",
 				label: "media",
 			},
+		},
+		galleriesMedia: {
+			forward: {
+				on: "galleries",
+				has: "many",
+				label: "media"
+			},
+			reverse: {
+				on: "media",
+				has: "many",
+				label: "linked_galleries"
+			}
 		},
 		profilesAvatar: {
 			forward: {

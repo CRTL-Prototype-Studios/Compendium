@@ -19,6 +19,26 @@ const rules = {
      *   bind: ["isOwner", "data.creator == auth.uid"],
      * },
      */
+    galleries: {
+        bind: ["isOwner", "data.owner.owner.id == auth.uid"],
+        allow: {
+            view: "true",
+            $default: "isOwner",
+        },
+    },
+    $users: {
+        allow: {
+            $default: "true",
+            update: "false",
+        },
+    },
+    profiles: {
+        bind: ["isOwner", "data.owner.id == auth.uid"],
+        allow: {
+            view: "true",
+            $default: "isOwner",
+        },
+    },
 } satisfies InstantRules;
 
 export default rules;

@@ -1,4 +1,4 @@
-import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
+// import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 interface StructuredMedia {
 	[key: string]: {
@@ -8,18 +8,20 @@ interface StructuredMedia {
 }
 
 export default defineEventHandler(async (event) => {
-	const $db = useInstantDBAdmin();
+	// const $db = useInstantDBAdmin();
 	// const prisma = usePrismaClient()
+
+	const {data} = await readBody(event)
 	try {
-		const data = await $db.db.query({
-			files: {
-				$: {
-					order: {
-						created_at: "desc",
-					},
-				},
-			},
-		});
+		// const data = await $db.db.query({
+		// 	files: {
+		// 		$: {
+		// 			order: {
+		// 				created_at: "desc",
+		// 			},
+		// 		},
+		// 	},
+		// });
 
 		const structuredResult: StructuredMedia = {
 			"/": { files: [], folders: {} },

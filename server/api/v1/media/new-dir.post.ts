@@ -1,6 +1,5 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const processFolderName = (input: string) => {
@@ -20,7 +19,6 @@ export default defineEventHandler(async (event) => {
 
 	const { targetPath, folderName } = await readBody(event);
 	const header = getHeader(event, "Authorization");
-	const $db = useInstantDBAdmin();
 
 	// Sample input: targetPath is "Images", or "Images/AnotherFolder", or ""
 	if (!header) {
@@ -42,18 +40,24 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		await fs.mkdir(fullPath, { recursive: true });
-		const id = $db.id();
-		await $db.db.transact([
-			$db.db.tx.files[id].update({
-				url: permalink,
-				fileName: folderName,
-				path: fullPath,
-				directory: true,
-				pseudoDir: processPseudoDir(targetPath),
-			}),
-		]);
+		// const id = $db.id();
+		// await $db.db.transact([
+		// 	$db.db.tx.files[id].update({
+		// 		url: permalink,
+		// 		fileName: folderName,
+		// 		path: fullPath,
+		// 		directory: true,
+		// 		pseudoDir: processPseudoDir(targetPath),
+		// 	}),
+		// ]);
 
-		return { success: true, message: `Directory created: ${folderName}` };
+		return {
+			url: permalink,
+			fileName: folderName,
+			path: fullPath,
+			directory: true,
+			pseudoDir: processPseudoDir(targetPath),
+		};
 	} catch (error) {
 		console.error("Error creating directory:", error);
 		throw createError({

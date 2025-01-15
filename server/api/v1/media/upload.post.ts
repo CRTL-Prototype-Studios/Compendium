@@ -2,7 +2,6 @@ import { randomUUID } from "node:crypto";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { target } from "@vue/devtools-shared";
-import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
 	const form = await readMultipartFormData(event);
@@ -11,7 +10,6 @@ export default defineEventHandler(async (event) => {
 	const targetPath = query.targetPath as string;
 	// Sample input: target directory is "Images", or "Images/AnotherFolder", or ""; default value is ""
 	const config = useRuntimeConfig();
-	const $db = useInstantDBAdmin();
 
 	// const prisma = usePrismaClient()
 
@@ -56,19 +54,26 @@ export default defineEventHandler(async (event) => {
 		const permalink = `/${path.join("media", path.join(targetPath, uniqueFilename))}`;
 		console.log(permalink);
 
-		const id = $db.id();
-		await $db.db.transact([
-			$db.db.tx.files[id].update({
-				fileName: uniqueFilename,
-				url: permalink,
-				path: nativeFilePath,
-				pseudoDir: processPseudoDir(targetPath),
-			}),
-		]);
+		// const id = $db.id();
+		// await $db.db.transact([
+		// 	$db.db.tx.files[id].update({
+		// 		fileName: uniqueFilename,
+		// 		url: permalink,
+		// 		path: nativeFilePath,
+		// 		pseudoDir: processPseudoDir(targetPath),
+		// 	}),
+		// ]);
+
+		// return {
+		// 	success: true,
+		// 	permalink: permalink,
+		// };
 
 		return {
-			success: true,
-			permalink: permalink,
+			fileName: uniqueFilename,
+			url: permalink,
+			path: nativeFilePath,
+			pseudoDir: processPseudoDir(targetPath),
 		};
 	} catch (error) {
 		console.error("Error saving file:", error);

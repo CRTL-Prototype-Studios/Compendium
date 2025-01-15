@@ -1,11 +1,11 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
+// import { useInstantDBAdmin } from "~~/server/utils/useInstantDBAdmin";
 
 export default defineEventHandler(async (event) => {
-	const { targetPath, targetId } = await readBody(event);
+	const { targetPath, data } = await readBody(event);
 	const header = getHeader(event, "Authorization");
-	const $db = useInstantDBAdmin();
+	// const $db = useInstantDBAdmin();
 
 	if (!header) {
 		throw createError({
@@ -31,16 +31,16 @@ export default defineEventHandler(async (event) => {
 	}
 
 	try {
-		const data = await $db.db.query({
-			files: {
-				$: {
-					where: {
-						id: targetId,
-						pseudoDir: psuedoDir,
-					},
-				},
-			},
-		});
+		// const data = await $db.db.query({
+		// 	files: {
+		// 		$: {
+		// 			where: {
+		// 				id: targetId,
+		// 				pseudoDir: psuedoDir,
+		// 			},
+		// 		},
+		// 	},
+		// });
 
 		if (!data || data.files.length <= 0)
 			throw new Error(`No file/folder at directory ${targetPath}`);
